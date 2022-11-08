@@ -1,0 +1,6 @@
+sequenceDiagram
+browser->>server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+Note right of browser: Browser sends a request to create a new note.
+server->>browser: {content: ",mm,", date: "2022-11-08T06:22:05.202Z"}
+Note left of server: Server sends the content and date as response <br> and browser just adds the new note by manipulating  <br> the javascript it fetched earlier.
+
