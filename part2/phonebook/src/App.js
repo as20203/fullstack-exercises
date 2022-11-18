@@ -73,8 +73,10 @@ const App = () => {
     }
     fetchPersons()
   }, [])
-
-  const addToPhoneBook = async (newPerson = {}) => await personService.create(newPerson);
+  const addToPhoneBook = async (newPerson = {}) => {
+    const person = await personService.create(newPerson)
+    return person?.data
+  };
   const checkNameInPhoneBook = (phoneBook = [], submittedName = '') => {
     const person = { index: -1, id: -1 };
 
@@ -104,8 +106,8 @@ const App = () => {
           updatedPerson[index] = updatedPersonNumber;
           return updatedPerson;
         })
-      } catch {
-        setNotificationMessage({type: 'error', text: `Information of ${newName} has been removed from the server.`})
+      } catch (error) {
+        setNotificationMessage({type: 'error', text: error?.response?.data})
         setTimeout(() => {
           setNotificationMessage('')
         }, 5000)
@@ -113,8 +115,9 @@ const App = () => {
     }
     if (!submittedNameExists) {
       try {
-        const newPerson = { name: newName, number: phoneNumber, id: persons?.[persons.length -1]?.id + 1 || 1 };
-        await addToPhoneBook(newPerson)
+        const newPerson = { name: newName, number: phoneNumber };
+        const { id } = await addToPhoneBook(newPerson)
+        newPerson.id = id;
         setNotificationMessage({type: 'info', text: `Added ${newName}`})
         setTimeout(() => {
           setNotificationMessage(null)
@@ -124,8 +127,8 @@ const App = () => {
           updatedPersons.push(newPerson)
           return updatedPersons;
         })
-      } catch {
-        setNotificationMessage({type: 'error', text: `Information of ${newName} has been removed from the server.`})
+      } catch (error) {
+        setNotificationMessage({type: 'error', text: error?.response?.data })
         setTimeout(() => {
           setNotificationMessage('')
         }, 5000)
