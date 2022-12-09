@@ -1,5 +1,7 @@
 const express = require('express')
 const app = express()
+require('express-async-errors')
+
 const cors = require('cors')
 const logger = require('./utils/logger')
 const middleware = require('./utils/middleware')
@@ -27,3 +29,5 @@ const PORT = 3003
 app.listen(PORT, () => {
     logger.info(`Server running on port ${PORT}`)
 })
+
+module.exports = app;
