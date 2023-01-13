@@ -22,7 +22,6 @@ const errorHandler = (error, _, response, next) => {
   return next(error)
 }
 
-app.use(errorHandler)
 
 morgan.token('body', req => {
   return JSON.stringify(req.body)
@@ -108,6 +107,7 @@ app.put('/api/persons/:id', async (request, response, next) => {
     next(error)
   }
 })
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
 const hostname = '0.0.0.0'
