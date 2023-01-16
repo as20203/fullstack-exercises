@@ -6,6 +6,7 @@ import Notification from './Notification/Notification';
 const BlogList = ({ user, setUser, notification, setNotification }) => {
     const [blogs, setBlogs] = useState([])
     const [loading, setLoading] = useState(true);
+    const [toggleNote, setToggleNote] = useState(false);
     const getBlogs = async () => {
         try {
             const blogs = await blogService.getAll()
@@ -32,12 +33,14 @@ const BlogList = ({ user, setUser, notification, setNotification }) => {
                     notification &&
                     <Notification message={notification} />
                 }
+               
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
                     <div style={{ marginRight: '5px' }} > {user.name} logged in  </div>
                     <button onClick={handleLogout}> logout </button></div>
-                <AddBlog setBlogs={setBlogs} setNotification={setNotification} />
-                {blogs.map(blog =>
-                    <Blog key={blog.id} blog={blog} />
+                {toggleNote && <AddBlog setBlogs={setBlogs} setNotification={setNotification} />}
+                <button onClick={() => setToggleNote(toggleNote => !toggleNote)}> {toggleNote ? 'cancel' : 'new note'} </button>
+                {blogs.sort((a, b) => b.likes - a.likes ).map(blog =>
+                    <Blog setBlogs={setBlogs} key={blog.id} blog={blog} />
                 )}
             </div>}
         </>

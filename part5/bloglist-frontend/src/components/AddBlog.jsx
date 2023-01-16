@@ -6,15 +6,15 @@ const AddBlog = ({ setBlogs, setNotification }) => {
     const handleSubmit = async (event) => {
         try {
             event.preventDefault();
-            console.log({ blog });
             const newBlog = await blogService.create(blog);
-            setBlogs(blogs => {
-                return [...blogs, newBlog]
-            })
+            
+            setBlog({ title: '', author: '', url: '' })
             setNotification({ type: 'info', text: `a new blog ${newBlog.title} by ${newBlog.author} added`})
             setTimeout(() => {
                 setNotification(null)
             }, 5000)
+            const blogs = await blogService.getAll()
+            setBlogs(blogs)
         } catch {
             setNotification({ type: 'error', text: 'Failed to add blog.' })
             setTimeout(() => {
@@ -61,7 +61,7 @@ const AddBlog = ({ setBlogs, setNotification }) => {
                 onChange={event => handleChange(event)}
             />
         </div>
-        <button type="submit">login</button>
+        <button type="submit">create</button>
     </form>
 }
 
