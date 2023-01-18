@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import BlogList from './components/BlogList'
-import Login from './components/Login';
-import blogService from './services/blogs';
+import Login from './components/Login'
+import blogService from './services/blogs'
 const App = () => {
 
 
@@ -10,11 +10,11 @@ const App = () => {
 
 
   useEffect(() => {
-    const user = localStorage.getItem('loggedBlogappUser');
+    const user = localStorage.getItem('loggedBlogappUser')
     if (user) {
-      const loggedInUser = JSON.parse(user);
-      blogService.setToken(loggedInUser.token);
-      setUser(loggedInUser);
+      const loggedInUser = JSON.parse(user)
+      blogService.setToken(loggedInUser.token)
+      setUser(loggedInUser)
     }
   }, [])
 
