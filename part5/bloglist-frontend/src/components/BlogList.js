@@ -54,14 +54,14 @@ const BlogList = ({ user, setUser, notification, setNotification }) => {
         <h2>blogs</h2>
         {
           notification &&
-                    <Notification message={notification} />
+            <Notification message={notification} />
         }
 
-        <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <div className='blogsList' style={{ display: 'flex', flexDirection: 'row' }}>
           <div style={{ marginRight: '5px' }} > {user.name} logged in  </div>
           <button onClick={handleLogout}> logout </button></div>
         {toggleNote && <BlogFrom createBlog={createBlog} />}
-        <button onClick={() => setToggleNote(toggleNote => !toggleNote)}> {toggleNote ? 'cancel' : 'new note'} </button>
+        <button id='blog-form-button' onClick={() => setToggleNote(toggleNote => !toggleNote)}> {toggleNote ? 'cancel' : 'new blog'} </button>
         {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
           <Blog setBlogs={setBlogs} key={blog.id} blog={blog} />
         )}

@@ -54,8 +54,8 @@ const Blog = ({ blog, setBlogs }) => {
     borderWidth: 1,
     marginBottom: 5
   }
-  return <div style={blogStyle}>
-    <span> {blog.title} </span> <span> {blog?.user?.name} </span>
+  return <div className='blog' style={blogStyle}>
+    <span id="blog-title"> {blog.title} </span> <span id="blog-creator"> {blog?.user?.name} </span>
     <button className='showDetailsButton' onClick={() => setShowDetails(showDetails => !showDetails)} style={{ display: 'inline', marginLeft: '5px' }}> {showDetails ? 'hide' : 'view'} </button>
     {showDetails && <div style={{ display: 'flex', flexDirection: 'column' }}>
       <div className='blogUrl'> {blog?.url} </div>
