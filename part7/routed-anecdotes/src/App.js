@@ -5,6 +5,8 @@ import {
   useMatch
 
 } from 'react-router-dom'
+import  { useField } from './hooks'
+
 const Menu = () => {
   const padding = {
     paddingRight: 5
@@ -56,23 +58,32 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('');
+    const {reset: resetContent,...content } = useField('content');
+    const {reset: resetAuthor, ...author}  = useField('author');
+    const {reset: resetInfo, ...info }    = useField('info');
+
+ 
   const navigate = useNavigate();
 
 
   const handleSubmit = (e) => {
     e.preventDefault()
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0
     });
-    props.setNotification(`a new anecdote ${content} created!`)
+    props.setNotification(`a new anecdote ${content.value} created!`)
     navigate('/')
   }
+
+  const resetForm = () => {
+   resetAuthor();
+   resetInfo();
+   resetContent();
+  }
+
 
   return (
     <div>
@@ -80,17 +91,18 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input name='content' {...content} />
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input name='author' {...author} />
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
+          <input name='info' {...info} />
         </div>
-        <button>create</button>
+        <button type='submit'>create</button>
+         <button type='button' onClick={() => resetForm()} >reset</button>
       </form>
     </div>
   )
@@ -98,6 +110,7 @@ const CreateNew = (props) => {
 }
 
 const Anecdote = ({ anecdote }) => {
+  console.log(anecdote)
   return <>
     <h1> {anecdote.content} by {anecdote.author} </h1>
     <p>has {anecdote.votes} votes</p>
@@ -127,13 +140,14 @@ const App = () => {
   const anecdote = match 
     ? anecdotes.find(note => note.id === Number(match.params.id))
     : null
-
   const [notification, setNotification] = useState('')
 
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
     setAnecdotes(anecdotes.concat(anecdote))
   }
+
+
 
   const anecdoteById = (id) =>
     anecdotes.find(a => a.id === id)
@@ -152,7 +166,7 @@ const App = () => {
   return (
       <div>
         <h1>Software anecdotes</h1>
-        <Menu />
+        <Menu />  
         {notification}
         <Routes>
           <Route path="/create" element={<CreateNew addNew={addNew} setNotification={setNotification} />} />
