@@ -2,6 +2,18 @@ const bcrypt = require('bcryptjs')
 const usersRouter = require('express').Router()
 const User = require('../models/users')
 
+usersRouter.get('/:id', async (request, response) => {
+  const { id } = request.params
+  console.log({ id })
+  const users = await User.findById(id).populate('blogs', {
+    url: 1,
+    title: 1,
+    author: 1,
+    id: 1,
+  })
+  response.json(users)
+})
+
 usersRouter.post('/', async (request, response) => {
   const { username, name, password } = request.body
   if (!password || password.length < 3) {

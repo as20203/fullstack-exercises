@@ -15,12 +15,22 @@ blogsRouter.delete('/:id', async (request, response) => {
   const user = request.user
   const userId = user.id
   const blog = await Blog.findById(request?.params?.id)
-  console.log({ blog })
   if (blog?.user.toString() === userId.toString()) {
     await Blog.findByIdAndRemove(request.params.id)
-    return response.status(204).end()
+    return response.status(204).json(blog)
   }
   return response.status(403).json({ error: 'Operation not allowed.' })
+})
+
+blogsRouter.get('/:id', async (request, response) => {
+  const { id } = request.params
+  console.log({ id })
+  const blog = await Blog.findById(id).populate('user', {
+    username: 1,
+    name: 1,
+    id: 1,
+  })
+  return response.json(blog)
 })
 
 blogsRouter.post('/', async (request, response) => {

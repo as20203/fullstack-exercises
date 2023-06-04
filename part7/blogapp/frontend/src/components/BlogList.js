@@ -1,82 +1,73 @@
-import { useState, useEffect } from 'react'
-import Blog from './Blog'
+import { useState, useContext } from 'react'
 import blogService from '../services/blogs'
 import BlogFrom from './BlogForm'
-import Notification from './Notification/Notification'
-const BlogList = ({ user, setUser, notification, setNotification }) => {
-  const [blogs, setBlogs] = useState([])
-  const [loading, setLoading] = useState(true)
+import NotificationContext from '../NotificationContext'
+import { Link } from 'react-router-dom'
+import { useQuery, useMutation, useQueryClient } from 'react-query'
+
+const BlogList = () => {
+  const queryClient = useQueryClient()
+  const [, dispatch] = useContext(NotificationContext)
   const [toggleNote, setToggleNote] = useState(false)
+  const newBlogMutation = useMutation(blogService.create, {
+    onSuccess: (newBlog) => {
+      const blogs = queryClient.getQueryData('blogs')
+      queryClient.setQueryData('blogs', blogs.concat(newBlog))
+    },
+  })
+
+  const blogs = useQuery('blogs', blogService.getAll)
 
   const createBlog = async (blog) => {
     try {
-      const newBlog = await blogService.create(blog)
-
-      setNotification({
+      newBlogMutation.mutate(blog)
+      dispatch({
         type: 'info',
-        text: `a new blog ${newBlog.title} by ${newBlog.author} added`,
+        text: `a new blog ${blog.title} by ${blog.author} added`,
       })
       setTimeout(() => {
-        setNotification(null)
+        dispatch({ type: 'clear', text: '' })
       }, 5000)
-      const blogs = await blogService.getAll()
-      setBlogs(blogs)
     } catch {
-      setNotification({ type: 'error', text: 'Failed to add blog.' })
+      dispatch({ type: 'error', text: 'Failed to add blog.' })
       setTimeout(() => {
-        setNotification(null)
+        dispatch({ type: 'clear', text: '' })
       }, 5000)
     }
   }
 
-  const getBlogs = async () => {
-    try {
-      const blogs = await blogService.getAll()
-      setBlogs(blogs)
-      setLoading(false)
-    } catch (error) {
-      setLoading(false)
-    }
+  if (blogs.isLoading) {
+    return <div>loading data...</div>
   }
-
-  const handleLogout = () => {
-    setUser(null)
-    localStorage.clear()
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: 'solid',
+    borderWidth: 1,
+    marginBottom: 5,
   }
-  useEffect(() => {
-    getBlogs()
-  }, [])
 
   return (
-    <>
-      {!loading && (
-        <div>
-          <h2>blogs</h2>
-          {notification && <Notification message={notification} />}
-
-          <div
-            className="blogsList"
-            style={{ display: 'flex', flexDirection: 'row' }}
-          >
-            <div style={{ marginRight: '5px' }}> {user.name} logged in </div>
-            <button onClick={handleLogout}> logout </button>
+    <div>
+      {toggleNote && <BlogFrom createBlog={createBlog} />}
+      <button
+        id="blog-form-button"
+        onClick={() => setToggleNote((toggleNote) => !toggleNote)}
+      >
+        {' '}
+        {toggleNote ? 'cancel' : 'new blog'}{' '}
+      </button>
+      {blogs.data
+        .sort((a, b) => b.likes - a.likes)
+        .map((blog) => (
+          <div key={blog?.id} className="blog" style={blogStyle}>
+            <Link to={`/blogs/${blog?.id}`}>
+              <span id="blog-title"> {blog.title} </span>{' '}
+              <span id="blog-creator"> {blog?.user?.name} </span>
+            </Link>
           </div>
-          {toggleNote && <BlogFrom createBlog={createBlog} />}
-          <button
-            id="blog-form-button"
-            onClick={() => setToggleNote((toggleNote) => !toggleNote)}
-          >
-            {' '}
-            {toggleNote ? 'cancel' : 'new blog'}{' '}
-          </button>
-          {blogs
-            .sort((a, b) => b.likes - a.likes)
-            .map((blog) => (
-              <Blog setBlogs={setBlogs} key={blog.id} blog={blog} />
-            ))}
-        </div>
-      )}
-    </>
+        ))}
+    </div>
   )
 }
 

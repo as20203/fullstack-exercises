@@ -1,12 +1,16 @@
 import { useState } from 'react'
 import loginService from '../services/login'
 import blogService from '../services/blogs'
+import userService from '../services/users'
 import Notification from './Notification/Notification'
-import PropTypes from 'prop-types'
-
-const Login = ({ setUser, notification, setNotification }) => {
+import { useContext } from 'react'
+import NotificationContext from '../NotificationContext'
+import userContext from '../UserContext'
+const Login = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [notification, dispatch] = useContext(NotificationContext)
+  const [, userDispatch] = useContext(userContext)
   const handleLogin = async (event) => {
     event.preventDefault()
 
@@ -15,20 +19,23 @@ const Login = ({ setUser, notification, setNotification }) => {
         username,
         password,
       })
-      setUser(user)
+
       setUsername('')
       setPassword('')
       localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       blogService.setToken(user.token)
+      userService.setToken(user.token)
+      userDispatch({ type: 'LOGGED_IN', data: user })
     } catch (exception) {
-      setNotification({ type: 'error', text: 'Wrong username or passsword.' })
+      dispatch({ type: 'error', text: 'Wrong username or passsword.' })
       setTimeout(() => {
-        setNotification(null)
+        dispatch({ type: 'clear', text: '' })
       }, 5000)
     }
   }
   return (
     <>
+      <h1>log in to application</h1>
       {notification && <Notification message={notification} />}
       <form onSubmit={handleLogin}>
         <div>
@@ -57,11 +64,6 @@ const Login = ({ setUser, notification, setNotification }) => {
       </form>
     </>
   )
-}
-Login.propTypes = {
-  setUser: PropTypes.func.isRequired,
-  notification: PropTypes.object,
-  setNotification: PropTypes.func.isRequired,
 }
 
 export default Login
