@@ -2,10 +2,13 @@ import { useMutation, useQueryClient } from 'react-query'
 import blogService from '../services/blogs'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useQuery } from 'react-query'
+import { useState } from 'react'
 const Blog = () => {
   const queryClient = useQueryClient()
+  const [comment, setComment] = useState('')
   const id = useParams().id
   const navigate = useNavigate()
+
   const updateBlogMutation = useMutation(blogService.update, {
     onSuccess: () => {
       queryClient.invalidateQueries('blogs')
@@ -28,15 +31,34 @@ const Blog = () => {
   })
 
   const blogQuery = useQuery(['blogs', id], blogService.getBlog)
-  if (blogQuery.isLoading) {
+  const blogCommentQuery = useQuery(
+    ['blogComments', id],
+    blogService.getBlogComments
+  )
+
+  const createBlogCommentMutation = useMutation(blogService.addBlogComment, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('blogComments')
+    },
+  })
+
+  if (blogQuery.isLoading || blogCommentQuery.isLoading) {
     return <div>loading data...</div>
   }
+  const comments = blogCommentQuery.data
   const blog = blogQuery.data
+
   const getUserId = () => {
     try {
       const user = JSON.parse(localStorage.getItem('loggedBlogappUser'))
       return user?.id
     } catch (error) {}
+  }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    console.log('came here', comment)
+    createBlogCommentMutation.mutate({ id: blog?.id, text: comment })
   }
 
   const handleLikes = async () => {
@@ -84,6 +106,19 @@ const Blog = () => {
           {getUserId() === blog?.user?.id && (
             <button onClick={() => handleDelete()}> remove </button>
           )}
+        </div>
+        <div>
+          <h2> comments </h2>
+          <form style={{ display: 'flex' }} onSubmit={handleSubmit}>
+            <input
+              onChange={(event) => setComment(event.target.value)}
+              type="text"
+            ></input>
+            <button type="submit">Add comment </button>
+          </form>
+          {comments?.map(({ text, id }) => (
+            <p key={id}> {text} </p>
+          ))}
         </div>
       </div>
     </div>

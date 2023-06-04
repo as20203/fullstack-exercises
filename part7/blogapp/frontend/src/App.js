@@ -3,6 +3,7 @@ import BlogList from './components/BlogList'
 import Login from './components/Login'
 import Users from './components/Users'
 import blogService from './services/blogs'
+import userService from './services/users'
 import userContext from './UserContext'
 import NotificationContext from './NotificationContext'
 import Notification from './components/Notification/Notification'
@@ -23,6 +24,7 @@ const App = () => {
     if (user) {
       const loggedInUser = JSON.parse(user)
       blogService.setToken(loggedInUser.token)
+      userService.setToken(loggedInUser.token)
       dispatch({ type: 'LOGGED_IN', data: loggedInUser })
     }
   }, [dispatch])

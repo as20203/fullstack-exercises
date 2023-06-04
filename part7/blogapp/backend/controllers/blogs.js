@@ -1,5 +1,6 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blogs')
+const Comment = require('../models/comments')
 const User = require('../models/users')
 
 blogsRouter.get('/', async (_, response) => {
@@ -68,6 +69,26 @@ blogsRouter.put('/:id', async (request, response, next) => {
   }
   const updatedBlogPost = await Blog.findByIdAndUpdate(id, post, { new: true })
   return response.json(updatedBlogPost)
+})
+
+blogsRouter.post('/:id/comments/', async (request, response) => {
+  const {
+    body: { text },
+    params: { id },
+  } = request
+  if (!text)
+    return response.status(400).json({ message: `Missing comment text` })
+  const comment = new Comment({ text, blogId: id })
+  const result = await comment.save()
+  return response.status(201).json(result)
+})
+
+blogsRouter.get('/:id/comments/', async (request, response) => {
+  const {
+    params: { id },
+  } = request
+  const comment = await Comment.find({ blogId: id })
+  return response.json(comment)
 })
 
 module.exports = blogsRouter

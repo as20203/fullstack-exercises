@@ -54,5 +54,39 @@ const deleteBlog = async (blogId) => {
   return blogId
 }
 
-const blogService = { getAll, setToken, create, update, deleteBlog, getBlog }
+const addBlogComment = async (newObject) => {
+  const { id, ...comment } = newObject
+  const config = {
+    headers: { Authorization: token },
+  }
+
+  const response = await axios.post(
+    `${baseUrl}/${id}/comments`,
+    comment,
+    config
+  )
+  return response.data
+}
+
+const getBlogComments = async ({ queryKey }) => {
+  const [, id] = queryKey
+
+  const config = {
+    headers: { Authorization: token },
+  }
+
+  const response = await axios.get(`${baseUrl}/${id}/comments`, config)
+  return response.data
+}
+
+const blogService = {
+  getAll,
+  setToken,
+  create,
+  update,
+  deleteBlog,
+  getBlog,
+  addBlogComment,
+  getBlogComments,
+}
 export default blogService
