@@ -6,6 +6,8 @@ import Notification from './Notification/Notification'
 import { useContext } from 'react'
 import NotificationContext from '../NotificationContext'
 import userContext from '../UserContext'
+import { Container, Button, Form, Input, Heading } from '../styledComponents'
+
 const Login = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -34,35 +36,35 @@ const Login = () => {
     }
   }
   return (
-    <>
-      <h1>log in to application</h1>
+    <Container width="500">
+      <Heading>Log in to application</Heading>
       {notification && <Notification message={notification} />}
-      <form onSubmit={handleLogin}>
-        <div>
+      <Form onSubmit={handleLogin}>
+        <Container>
           username
-          <input
+          <Input
             id="username"
             type="text"
             value={username}
             name="Username"
             onChange={({ target }) => setUsername(target.value)}
           />
-        </div>
-        <div>
+        </Container>
+        <Container>
           password
-          <input
+          <Input
             id="password"
             type="password"
             value={password}
             name="Password"
             onChange={({ target }) => setPassword(target.value)}
           />
-        </div>
-        <button id="login-button" type="submit">
+        </Container>
+        <Button id="login-button" type="submit">
           login
-        </button>
-      </form>
-    </>
+        </Button>
+      </Form>
+    </Container>
   )
 }
 
