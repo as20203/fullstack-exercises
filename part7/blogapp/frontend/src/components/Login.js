@@ -36,7 +36,7 @@ const Login = () => {
     }
   }
   return (
-    <Container width="500">
+    <Container margin="auto" width="500">
       <Heading>Log in to application</Heading>
       {notification && <Notification message={notification} />}
       <Form onSubmit={handleLogin}>

@@ -10,6 +10,7 @@ import Notification from './components/Notification/Notification'
 import UserBlogs from './components/UserBlogs'
 import Blog from './components/Blog'
 import { Routes, Route, useNavigate, Link } from 'react-router-dom'
+import { Button, Container } from './styledComponents'
 const App = () => {
   const [user, dispatch] = useContext(userContext)
   const [notification] = useContext(NotificationContext)
@@ -32,24 +33,43 @@ const App = () => {
     <>
       {user && (
         <>
-          <div
-            className="blogsList"
-            style={{
-              display: 'flex',
-              background: 'grey',
-              flexDirection: 'row',
-              justifyContent: 'left',
-            }}
+          <Container
+            display="flex"
+            background="#dddddd"
+            flexDirection="row"
+            justifyContent="left"
           >
-            <Link style={{ paddingRight: '5px' }} to="/">
+            <Link
+              style={{
+                color: 'blue',
+                paddingRight: '5px',
+                textDecoration: 'none',
+                padding: '10px',
+              }}
+              to="/"
+            >
               blogs
             </Link>
-            <Link style={{ paddingRight: '5px' }} to="/users">
+            <Link
+              style={{
+                color: 'blue',
+                paddingRight: '5px',
+                textDecoration: 'none',
+                padding: '10px',
+              }}
+              to="/users"
+            >
               users
             </Link>
-            <div style={{ marginRight: '5px' }}> {user?.name} logged in </div>
-            <button onClick={handleLogout}> logout </button>
-          </div>
+            <Container margin="0px 5px 0px 0px" padding="10px">
+              {' '}
+              {user?.name} logged in{' '}
+            </Container>
+            <Button padding="10px" onClick={handleLogout}>
+              {' '}
+              logout{' '}
+            </Button>
+          </Container>
           <h2>Blog app</h2>
           {notification && <Notification message={notification} />}
         </>

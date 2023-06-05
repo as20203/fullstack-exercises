@@ -1,10 +1,10 @@
 import styled from 'styled-components'
 
 export const Button = styled.button`
-  background-color: #e7e7e7;
-  color: black;
+  background-color: ${({ backgroundColor }) => backgroundColor || `#e7e7e7`};
+  color: ${({ backgroundColor }) => backgroundColor || `black`};
   border: none;
-  padding: 10px 32px;
+  padding: ${({ padding }) => padding || `10px 32px`};
   text-align: center;
   text-decoration: none;
   display: inline-block;
