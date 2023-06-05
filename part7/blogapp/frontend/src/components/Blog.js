@@ -3,6 +3,7 @@ import blogService from '../services/blogs'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useQuery } from 'react-query'
 import { useState } from 'react'
+import { Button, Container, Form, Input } from '../styledComponents'
 const Blog = () => {
   const queryClient = useQueryClient()
   const [comment, setComment] = useState('')
@@ -79,49 +80,69 @@ const Blog = () => {
       // eslint-disable-next-line no-empty
     } catch (error) {}
   }
-  const blogStyle = {
-    fontWeight: 'bold',
-  }
+
   return (
-    <div className="blog">
-      <div style={blogStyle}>
+    <Container padding="10px">
+      <Container padding="10px" margin="10px 0px 5px 0px" fontWeight="bold">
         <span id="blog-title"> {blog?.title} </span>{' '}
         <span id="blog-creator"> {blog?.user?.name} </span>
-      </div>
+      </Container>
 
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <Link to={blog?.url} className="blogUrl">
+      <Container display="flex" flexDirection="column">
+        <Link
+          style={{
+            color: 'blue',
+            textDecoration: 'none',
+            padding: '10px',
+          }}
+          to={blog?.url}
+          className="blogUrl"
+        >
           {' '}
           {blog?.url}{' '}
         </Link>
-        <span className="blogLikes">
+        <span style={{ padding: '10px' }}>
           likes {blog.likes}{' '}
-          <button className="blogLikesButton" onClick={() => handleLikes()}>
+          <Button
+            padding="10px"
+            className="blogLikesButton"
+            onClick={() => handleLikes()}
+          >
             {' '}
             like{' '}
-          </button>
+          </Button>
         </span>
         {blog?.author && `added by ${blog?.author}`}
-        <div>
+        <Container margin="5px">
           {getUserId() === blog?.user?.id && (
-            <button onClick={() => handleDelete()}> remove </button>
+            <Button
+              backgroundColor="red"
+              color="white"
+              onClick={() => handleDelete()}
+            >
+              {' '}
+              remove{' '}
+            </Button>
           )}
-        </div>
+        </Container>
         <div>
-          <h2> comments </h2>
-          <form style={{ display: 'flex' }} onSubmit={handleSubmit}>
-            <input
-              onChange={(event) => setComment(event.target.value)}
-              type="text"
-            ></input>
-            <button type="submit">Add comment </button>
-          </form>
+          <Container width={400}>
+            <h2> comments </h2>
+            <Form onSubmit={handleSubmit}>
+              <Input
+                onChange={(event) => setComment(event.target.value)}
+                type="text"
+              />
+              <Button type="submit">Add comment </Button>
+            </Form>
+          </Container>
+
           {comments?.map(({ text, id }) => (
             <p key={id}> {text} </p>
           ))}
         </div>
-      </div>
-    </div>
+      </Container>
+    </Container>
   )
 }
 

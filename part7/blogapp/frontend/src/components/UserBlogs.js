@@ -14,7 +14,10 @@ const UserBlogs = () => {
       <h2>added blogs</h2>
       <ul>
         {userBlogs?.data?.blogs?.map(({ title, id }) => (
-          <li key={id}> {title} </li>
+          <li style={{ listStyleType: 'circle' }} key={id}>
+            {' '}
+            {title}{' '}
+          </li>
         ))}
       </ul>
     </>

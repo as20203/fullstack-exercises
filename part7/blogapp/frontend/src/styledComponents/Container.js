@@ -6,7 +6,7 @@ export const Container = styled.div`
   margin: ${({ margin }) => `${margin}` || 0};
   padding: ${({ padding }) => `${padding}` || 0};
   border: ${({ border }) => `${border}` || 0};
-
+  font-weight: ${({ fontWeight }) => `${fontWeight}` || 0};
   width: ${({ width }) => `${width}px` || '100%'};
   background: ${({ background }) => `${background}` || 'none'};
   flex-direction: ${({ flexDirection }) => `${flexDirection}` || 'row'};
