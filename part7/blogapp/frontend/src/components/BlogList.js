@@ -4,6 +4,7 @@ import BlogFrom from './BlogForm'
 import NotificationContext from '../NotificationContext'
 import { Link } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
+import { Button, Container } from '../styledComponents'
 
 const BlogList = () => {
   const queryClient = useQueryClient()
@@ -39,33 +40,40 @@ const BlogList = () => {
   if (blogs.isLoading) {
     return <div>loading data...</div>
   }
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
-  }
-
   return (
     <div>
       {toggleNote && <BlogFrom createBlog={createBlog} />}
-      <button
+      <Button
+        backgroundColor="green"
+        color="white"
         id="blog-form-button"
         onClick={() => setToggleNote((toggleNote) => !toggleNote)}
       >
         {' '}
         {toggleNote ? 'cancel' : 'new blog'}{' '}
-      </button>
+      </Button>
       {blogs.data
         .sort((a, b) => b.likes - a.likes)
         .map((blog) => (
-          <div key={blog?.id} className="blog" style={blogStyle}>
-            <Link to={`/blogs/${blog?.id}`}>
-              <span id="blog-title"> {blog.title} </span>{' '}
-              <span id="blog-creator"> {blog?.user?.name} </span>
+          <Container
+            key={blog?.id}
+            className="blog"
+            padding="10px 0px 0px 2px"
+            border="2px solid black"
+            margin="10px 0px 5px 0px"
+          >
+            <Link
+              style={{
+                color: 'blue',
+                paddingRight: '5px',
+                textDecoration: 'none',
+                padding: '10px',
+              }}
+              to={`/blogs/${blog?.id}`}
+            >
+              <span> {blog.title} </span> <span> {blog?.user?.name} </span>
             </Link>
-          </div>
+          </Container>
         ))}
     </div>
   )

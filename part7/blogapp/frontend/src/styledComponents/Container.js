@@ -5,6 +5,7 @@ export const Container = styled.div`
   width: ${({ width }) => `${width}px` || '100%'};
   margin: ${({ margin }) => `${margin}` || 0};
   padding: ${({ padding }) => `${padding}` || 0};
+  border: ${({ border }) => `${border}` || 0};
 
   width: ${({ width }) => `${width}px` || '100%'};
   background: ${({ background }) => `${background}` || 'none'};

@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export const Button = styled.button`
   background-color: ${({ backgroundColor }) => backgroundColor || `#e7e7e7`};
-  color: ${({ backgroundColor }) => backgroundColor || `black`};
+  color: ${({ color }) => color || `black`};
   border: none;
   padding: ${({ padding }) => padding || `10px 32px`};
   text-align: center;

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Button, Container, Form, Input } from '../styledComponents'
 
 const BlogForm = ({ createBlog }) => {
   const [blog, setBlog] = useState({ title: '', author: '', url: '' })
@@ -19,45 +20,47 @@ const BlogForm = ({ createBlog }) => {
   }
 
   return (
-    <form style={{ padding: '20px 0px' }} onSubmit={addBlog}>
-      create new:
-      <div>
-        title:
-        <input
-          id="title"
-          required
-          type="text"
-          value={blog.title}
-          name="title"
-          onChange={(event) => handleChange(event)}
-        />
-      </div>
-      <div>
-        author:
-        <input
-          id="author"
-          required
-          type="text"
-          value={blog.author}
-          name="author"
-          onChange={(event) => handleChange(event)}
-        />
-      </div>
-      <div>
-        url:
-        <input
-          id="url"
-          required
-          type="text"
-          value={blog.url}
-          name="url"
-          onChange={(event) => handleChange(event)}
-        />
-      </div>
-      <button id="add-blog-button" type="submit">
-        create
-      </button>
-    </form>
+    <Container width="500">
+      <Form style={{ padding: '20px 0px' }} onSubmit={addBlog}>
+        Create new:
+        <Container margin="5px 0 0 0">
+          title:
+          <Input
+            id="title"
+            required
+            type="text"
+            value={blog.title}
+            name="title"
+            onChange={(event) => handleChange(event)}
+          />
+        </Container>
+        <Container>
+          author:
+          <Input
+            id="author"
+            required
+            type="text"
+            value={blog.author}
+            name="author"
+            onChange={(event) => handleChange(event)}
+          />
+        </Container>
+        <Container>
+          url:
+          <Input
+            id="url"
+            required
+            type="text"
+            value={blog.url}
+            name="url"
+            onChange={(event) => handleChange(event)}
+          />
+        </Container>
+        <Button id="add-blog-button" type="submit">
+          create
+        </Button>
+      </Form>
+    </Container>
   )
 }
 
